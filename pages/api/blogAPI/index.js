@@ -4,32 +4,47 @@ let dbConfig = require('../../../database/db');
 // Connecting mongoDB Database
 mongoose.Promise = global.Promise;
 mongoose.connect(dbConfig.db, {
-  useNewUrlParser: true
+    useNewUrlParser: true
 }).then(() => {
-  console.log('Database sucessfully connected!')
+    console.log('Database sucessfully connected!')
 },
-  error => {
-    console.log('Could not connect to database : ' + error)
-  }
+    error => {
+        console.log('Could not connect to database : ' + error)
+    }
 )
 
-let blogSchema=require('../../../models/blog');
-export default(req,res)=>{
-    const {method}=req
-    switch(method){
+let blogSchema = require('../../../models/blog');
+export default (req, res) => {
+    const { method } = req
+    switch (method) {
         case 'GET':
-            try{
-                console.log("in try")
+            try {
+                console.log("in get try")
                 blogSchema.find((error, data) => {
                     if (error) {
-                      return next(error)
+                        return next(error)
                     } else {
-                      res.json(data)
+                        res.json(data)
                     }
-                  })
+                })
             }
-            catch(error){
-                res.status(400).json({success:false})
+            catch (error) {
+                res.status(400).json({ success: false })
+            }
+            break;
+        case 'POST':
+            try {
+                console.log("in post try")
+                blogSchema.create(req.body, (error, data) => {
+                    if (error) {
+                        return next(error)
+                    } else {
+                        res.json(data)
+                    }
+                })
+            }
+            catch (error) {
+                res.status(400).json({ success: false })
             }
             break;
         default:
